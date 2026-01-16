@@ -29,10 +29,16 @@ resource "cloudflare_zero_trust_organization" "organization" {
 
 resource "cloudflare_zero_trust_access_identity_provider" "google" {
   config = {
-    client_id     = var.google-client-id
-    client_secret = var.google-client-secret
+    client_id = var.google-client-id
+    # client_secret = var.google-client-secret
   }
   name       = "Google"
   type       = "google"
   account_id = var.account-id
+}
+
+resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnel" {
+  account_id = var.account-id
+  name       = "raspberry pi"
+  config_src = "cloudflare"
 }
