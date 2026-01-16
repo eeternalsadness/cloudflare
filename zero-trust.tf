@@ -42,3 +42,10 @@ resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnel" {
   name       = "raspberry pi"
   config_src = "cloudflare"
 }
+
+resource "cloudflare_zero_trust_tunnel_cloudflared_route" "tunnel-route" {
+  account_id = var.account-id
+  network    = "192.168.0.0/24"
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnel.id
+  comment    = "Homelab network"
+}
