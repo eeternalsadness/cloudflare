@@ -37,6 +37,30 @@ resource "cloudflare_zero_trust_access_identity_provider" "google" {
   account_id = var.account-id
 }
 
+resource "cloudflare_zero_trust_access_policy" "policy" {
+  account_id = var.account-id
+  name       = "Allow me"
+
+  approval_required = false
+  session_duration  = "6h"
+
+  decision = "allow"
+  include = [
+    {
+      email = {
+        email = "69bnguyen@gmail.com"
+      }
+    }
+  ]
+  require = [
+    {
+      email = {
+        email = "69bnguyen@gmail.com"
+      }
+    }
+  ]
+}
+
 resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnel" {
   account_id = var.account-id
   name       = "raspberry pi"
