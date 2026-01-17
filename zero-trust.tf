@@ -1,3 +1,4 @@
+# requires 'Account: Access: Organizations, Identity Providers, and Groups Write'
 resource "cloudflare_zero_trust_organization" "organization" {
   zone_id = cloudflare_zone.zone.id
 
@@ -27,6 +28,7 @@ resource "cloudflare_zero_trust_organization" "organization" {
   # }
 }
 
+# requires 'Account: Access: Organizations, Identity Providers, and Groups Write'
 resource "cloudflare_zero_trust_access_identity_provider" "google" {
   config = {
     client_id = var.google-client-id
@@ -37,6 +39,7 @@ resource "cloudflare_zero_trust_access_identity_provider" "google" {
   account_id = var.account-id
 }
 
+# requires 'Account: Access: Apps and Policies Write'
 resource "cloudflare_zero_trust_access_policy" "policy" {
   account_id = var.account-id
   name       = "Allow me"
@@ -61,12 +64,14 @@ resource "cloudflare_zero_trust_access_policy" "policy" {
   ]
 }
 
+# requires 'Account: Cloudflare Tunnel Write'
 resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnel" {
   account_id = var.account-id
   name       = "raspberry pi"
   config_src = "cloudflare"
 }
 
+# requires 'Account: Cloudflare Tunnel Write'
 resource "cloudflare_zero_trust_tunnel_cloudflared_route" "tunnel-route" {
   account_id = var.account-id
   network    = "192.168.0.0/24"
@@ -74,6 +79,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_route" "tunnel-route" {
   comment    = "Homelab network"
 }
 
+# requires 'Account: Zero Trust Write'
 resource "cloudflare_zero_trust_device_default_profile" "device-default-profile" {
   account_id = var.account-id
 
@@ -107,6 +113,7 @@ resource "cloudflare_zero_trust_device_default_profile" "device-default-profile"
   tunnel_protocol = "wireguard"
 }
 
+# requires 'Account: Zero Trust Write'
 resource "cloudflare_zero_trust_device_default_profile_local_domain_fallback" "device-default-local-domain-fallback" {
   account_id = var.account-id
   domains = [{

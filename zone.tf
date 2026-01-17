@@ -1,3 +1,4 @@
+# requires 'Zone: Zone Write'
 resource "cloudflare_zone" "zone" {
   account = {
     id = data.cloudflare_account.super-admin.account_id
