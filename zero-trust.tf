@@ -73,3 +73,44 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_route" "tunnel-route" {
   tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnel.id
   comment    = "Homelab network"
 }
+
+resource "cloudflare_zero_trust_device_default_profile" "device-default-profile" {
+  account_id = var.account-id
+
+  allow_mode_switch = false
+  allow_updates     = false
+  allowed_to_leave  = true
+
+  auto_connect          = 0
+  captive_portal        = 180
+  disable_auto_fallback = false
+  exclude_office_ips    = false
+
+  include = [
+    {
+      address     = cloudflare_zero_trust_tunnel_cloudflared_route.tunnel-route.network
+      description = cloudflare_zero_trust_tunnel_cloudflared_route.tunnel-route.comment
+    },
+    {
+      description = "zero trust domain"
+      host        = cloudflare_zero_trust_organization.organization.auth_domain
+    }
+  ]
+  # lan_allow_minutes              = 30
+  # lan_allow_subnet_size          = 24
+  register_interface_ip_with_dns = true
+  sccm_vpn_boundary_support      = false
+  service_mode_v2 = {
+    mode = "warp"
+  }
+  switch_locked   = false
+  tunnel_protocol = "wireguard"
+}
+
+resource "cloudflare_zero_trust_device_default_profile_local_domain_fallback" "device-default-local-domain-fallback" {
+  account_id = var.account-id
+  domains = [{
+    suffix     = "home.lan"
+    dns_server = ["192.168.0.42"]
+  }]
+}
